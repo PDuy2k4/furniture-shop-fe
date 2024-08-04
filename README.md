@@ -1,30 +1,5 @@
-# React + TypeScript + Vite
+## Web Template : [Link](<https://www.figma.com/design/vavq9u5QYOuw5rdqhxMirs/eCommerce-Website-%7C-Web-Page-Design-%7C-UI-KIT-%7C-Interior-Landing-Page-(Community)?node-id=117-538&t=7jFXQKPB3wEQOkQ8-0>)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Login Template : [Link](<https://www.figma.com/design/ly4hSdpQmvE0LwVoEYMks9/Login-Page-Design-(Community)?node-id=0-1&t=AGiHQpygJHsFZAtE-0>)
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Admin Template : [Link](<https://www.figma.com/design/AktvgCRMzUAQ375AcWwSIe/Admin-Template-(Community)?node-id=0-1&t=7F2RxJuhLprmEJGI-0>)
