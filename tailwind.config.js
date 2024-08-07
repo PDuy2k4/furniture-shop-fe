@@ -5,8 +5,8 @@ export default {
     extend: {
       keyframes: {
         slideDown: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(0)' }
+          '0%': { heigh: '0' },
+          '100%': { heigh: '100%' }
         }
       },
       animation: {

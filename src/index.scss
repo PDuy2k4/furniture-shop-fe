@@ -10,3 +10,12 @@
     @apply bg-white font-sans;
   }
 }
+
+input[type='password'] {
+  -webkit-text-security: disc;
+  /* Ẩn biểu tượng mắt trên trình duyệt dựa trên Chromium */
+  &::-ms-reveal,
+  &::-ms-clear {
+    display: none;
+  }
+}

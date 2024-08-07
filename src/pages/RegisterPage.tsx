@@ -1,7 +1,9 @@
 import googleIcon from '../assets/google-icon.svg'
 import { useFormik } from 'formik'
 import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
-import Alert from '@mui/material/Alert'
+import React from 'react'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
+import { useState } from 'react'
 export default function RegisterPage(props: any) {
   const formik = useFormik<{
     name: string
@@ -20,14 +22,16 @@ export default function RegisterPage(props: any) {
     validationSchema: ValidationRegisterForm,
     onSubmit: () => {} // Add an empty function as the onSubmit property
   })
+  const [showPassword, setShowPassword]: [boolean, React.Dispatch<React.SetStateAction<boolean>>] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword]: [boolean, React.Dispatch<React.SetStateAction<boolean>>] =
+    useState(false)
   // fix error of mail verification
-  console.log(formik.values)
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-[#ffe6c8]'>
-      <div className='rounded-lg px-6 py-4 bg-white '>
+      <div className='rounded-lg px-6 py-4 bg-white'>
         <div className='flex items-center rounded-md overflow-hidden'>
           {!props.isTablet && (
-            <div className='max-w-[600px]'>
+            <div className='max-w-[600px] caret-transparent'>
               <img
                 className='min-w-[200px] max-w-full min-h-[700px] rounded-md object-cover'
                 src='https://res.cloudinary.com/ecomsilver/image/upload/w_1250,h_800/CoachHouse/PageImages/CH_furniture_close_2023_.jpg'
@@ -40,25 +44,30 @@ export default function RegisterPage(props: any) {
             className={`min-w-[40vh] ${props.isMobile && 'justify-between min-h-screen w-screen'} p-8 flex flex-col ${!props.isMobile ? 'gap-2' : 'gap-1'}`}
             onSubmit={formik.handleSubmit}
           >
-            <h1 className={`${!props.isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal`}>
+            <h1 className={`${!props.isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal caret-transparent`}>
               Sign up your Account
             </h1>
-            <span className='text-sm inline-block mb-1 opacity-75'>See what is going on with your business</span>
-            <div className='py-2 flex items-center justify-center rounded-md border-2 border-black cursor-pointer hover:bg-slate-100'>
+            <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
+              See what is going on with your business
+            </span>
+            <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-2 border-black cursor-pointer hover:bg-slate-100'>
               <div className='flex gap-4 items-center'>
                 <img src={googleIcon} alt='' />
                 <span className='font-medium'>Sign up with Google</span>
               </div>
             </div>
-            <div className='opacity-50 flex items-center justify-center relative'>
+            <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
               <span className='p-1 bg-white'>or sign up with your Email</span>
               <div className='w-[90%] z-[-1] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
             </div>
-            <div className='flex flex-col gap-1 opacity-50'>
-              <label className='cursor-pointer' htmlFor='name'>
-                Your Name
-              </label>
-
+            <div className='flex flex-col gap-1 opacity-70'>
+              {!formik.errors.name ? (
+                <label className='cursor-pointer caret-transparent' htmlFor='name'>
+                  Your Name
+                </label>
+              ) : (
+                <span className='pointer-events-none text-sm text-red-600 caret-transparent'>{formik.errors.name}</span>
+              )}
               <input
                 id='name'
                 type='text'
@@ -68,19 +77,18 @@ export default function RegisterPage(props: any) {
                 onChange={formik.handleChange}
                 required
               />
-              {formik.errors.name && (
-                <div className='fixed z-10 top-0 right-0 left-0 flex items-center justify-center'>
-                  <Alert severity='warning' variant='filled'>
-                    {formik.errors.name}
-                  </Alert>
-                </div>
-              )}
             </div>
 
-            <div className='flex flex-col gap-1 opacity-50'>
-              <label className='cursor-pointer' htmlFor='email'>
-                Email
-              </label>
+            <div className='flex flex-col gap-1 opacity-70'>
+              {!formik.errors.email ? (
+                <label className='cursor-pointer caret-transparent' htmlFor='email'>
+                  Email
+                </label>
+              ) : (
+                <span className='pointer-events-none text-sm text-red-600 caret-transparent'>
+                  {formik.errors.email}
+                </span>
+              )}
               <input
                 id='email'
                 type='text'
@@ -88,56 +96,76 @@ export default function RegisterPage(props: any) {
                 className='w-full p-2 rounded-md border border-black'
                 value={formik.values.email}
                 onChange={formik.handleChange}
+                required
               />
-              {formik.errors.email && formik.touched.email && (
-                <div className='fixed z-10 top-0 right-0 left-0 flex items-center justify-center animate-slideDown'>
-                  <Alert severity='warning' variant='filled'>
-                    {formik.errors.email}
-                  </Alert>
-                </div>
-              )}
             </div>
-            <div className='flex flex-col gap-1 opacity-50'>
-              <label className='cursor-pointer' htmlFor='password'>
-                Password
-              </label>
-              <input
-                id='password'
-                type='password'
-                placeholder='Enter your password'
-                className='w-full p-2 rounded-md border border-black'
-                value={formik.values.password}
-                onChange={formik.handleChange}
-              />
-              {formik.errors.password && formik.touched.password && (
-                <div className='fixed z-10 top-0 right-0 left-0 flex items-center justify-center animate-slideDown'>
-                  <Alert severity='warning' variant='filled'>
-                    {formik.errors.password}
-                  </Alert>
-                </div>
+            <div className='flex flex-col gap-1 opacity-70'>
+              {!formik.errors.password ? (
+                <label className='cursor-pointer caret-transparent' htmlFor='password'>
+                  Password
+                </label>
+              ) : (
+                <span className='pointer-events-none text-sm text-red-600 caret-transparent'>
+                  {formik.errors.password}
+                </span>
               )}
-            </div>
-            <div className='flex flex-col gap-1 opacity-50'>
-              <label className='cursor-pointer' htmlFor='confirmPassword'>
-                Confirm Password
-              </label>
-              <input
-                id='confirmPassword'
-                type='password'
-                placeholder='Enter your confirm password'
-                className='w-full p-2 rounded-md border border-black'
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-              />
-              {formik.errors.confirmPassword && formik.touched.confirmPassword && (
-                <div className='fixed z-10 top-0 right-0 left-0 flex items-center justify-center animate-slideDown'>
-                  <Alert severity='warning' variant='filled'>
-                    {formik.errors.confirmPassword}
-                  </Alert>
+              <div className='relative'>
+                <input
+                  id='password'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='Enter your password'
+                  className='w-full pl-3 py-2 pr-8 rounded-md border border-black'
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  required
+                />
+                <div
+                  className='absolute right-1 bg-inherit cursor-pointer z-2 top-2 rounded-full'
+                  onClick={() => setShowPassword((val) => !val)}
+                >
+                  {showPassword ? (
+                    <EyeIcon className='h-6 w-6 text-[#7f265b]' />
+                  ) : (
+                    <EyeSlashIcon className='h-6 w-6 text-[#7f265b]' />
+                  )}
                 </div>
-              )}
+              </div>
             </div>
-            <div className={`${props.isMobile ? 'flex flex-col items-start' : 'flex justify-between items-center'}`}>
+            <div className='flex flex-col gap-1 opacity-70'>
+              {!formik.errors.confirmPassword ? (
+                <label className='cursor-pointer caret-transparent' htmlFor='confirmPassword'>
+                  Confirm Password
+                </label>
+              ) : (
+                <span className='pointer-events-none text-sm text-red-600 caret-transparent'>
+                  {formik.errors.confirmPassword}
+                </span>
+              )}
+              <div className='relative'>
+                <input
+                  id='confirmPassword'
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder='Enter your password'
+                  className='w-full pl-3 py-2 pr-8 rounded-md border border-black'
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange}
+                  required
+                />
+                <div
+                  className='absolute right-1 bg-inherit cursor-pointer z-2 top-2 rounded-full'
+                  onClick={() => setShowConfirmPassword((val) => !val)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeIcon className='h-6 w-6 text-[#7f265b]' />
+                  ) : (
+                    <EyeSlashIcon className='h-6 w-6 text-[#7f265b]' />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div
+              className={`${props.isMobile ? 'flex flex-col items-start caret-transparent' : 'flex caret-transparent justify-between items-center'}`}
+            >
               <div className='inline-flex ml-[-12px] items-center'>
                 <label className='relative flex items-center p-3 rounded-full cursor-pointer' htmlFor='remember'>
                   <input
@@ -176,7 +204,7 @@ export default function RegisterPage(props: any) {
             </div>
             <button
               type='submit'
-              className='bg-[#2394e0] rounded-md font-semibold text-white py-5 transition-all hover:bg-[#1e77c7]'
+              className='bg-[#7f265b] rounded-md caret-transparent font-semibold text-white py-5 transition-all hover:bg-[#9f3876]'
             >
               Create Your Account
             </button>
