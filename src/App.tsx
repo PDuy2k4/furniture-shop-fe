@@ -1,10 +1,15 @@
+import { Route, Routes } from 'react-router-dom'
+import RegisterPage from './pages/RegisterPage'
+import { useMediaQuery } from 'react-responsive'
+import { MediaSceens } from './constants/MediaScreens'
 function App() {
+  const isMobile = useMediaQuery({ query: MediaSceens.Mobile })
+  const isTablet = useMediaQuery({ query: MediaSceens.Tablet })
+
   return (
-    <>
-      <div className='h-screen flex justify-center items-center'>
-        <span className='font-bold text-red-500 text-xl'>Hello</span>
-      </div>
-    </>
+    <Routes>
+      <Route path='/register' element={<RegisterPage isTablet={isTablet} isMobile={isMobile} />} />
+    </Routes>
   )
 }
 

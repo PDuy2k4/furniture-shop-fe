@@ -13,12 +13,21 @@
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\""
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@heroicons/react": "^2.1.5",
+    "@mui/material": "^5.16.6",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/react-router-dom": "^5.3.3",
+    "formik": "^2.4.6",
+    "heroicons": "^2.1.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
-    "sass": "^1.77.8"
+    "react-responsive": "^10.0.0",
+    "react-router-dom": "^6.26.0",
+    "sass": "^1.77.8",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",
