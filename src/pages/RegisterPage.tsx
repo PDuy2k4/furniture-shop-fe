@@ -2,7 +2,7 @@ import RegisterForm from '~/components/RegisterForm'
 export default function RegisterPage(props: any) {
   // fix error of mail verification
   return (
-    <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-[#ffe6c8]'>
+    <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-[#f3f3f3]'>
       <div className='rounded-lg px-6 py-4 bg-white'>
         <div className='flex items-center rounded-md overflow-hidden'>
           {!props.isTablet && (

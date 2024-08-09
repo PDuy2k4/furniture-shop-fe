@@ -5,6 +5,8 @@ import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
 import CircularProgress from '@mui/material/CircularProgress'
 import http from '~/Api/http'
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const showPassReducer = (
   state: {
@@ -27,6 +29,7 @@ export default function RegisterForm(props: any) {
     sendingForm: boolean,
     setSendingForm: React.Dispatch<React.SetStateAction<boolean>>
   ] = useState(false)
+  const nav = useNavigate()
   const formik = useFormik<{
     name: string
     email: string
@@ -51,9 +54,14 @@ export default function RegisterForm(props: any) {
     }) => {
       setSendingForm(true)
       try {
-        await http.post('/auth/register', values)
-        setSendingForm(false)
+        const res = await http.post('/auth/register', values)
+        console.log(res)
+        if (res.status === 201) {
+          nav('/resendEmail')
+          setSendingForm(false)
+        }
       } catch (err) {
+        console.log(err)
         setSendingForm(false)
       }
     } // Add an empty function as the onSubmit property
@@ -75,15 +83,15 @@ export default function RegisterForm(props: any) {
       <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
         See what is going on with your business
       </span>
-      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-black cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#7f265b]'>
+      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-[#dcac3b] cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#e9c162]'>
         <div className='flex gap-4 items-center'>
           <img src={googleIcon} alt='' />
           <span className='font-medium'>Sign up with Google</span>
         </div>
       </div>
       <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
-        <span className='p-1 bg-white'>or sign up with your Email</span>
-        <div className='w-[90%] z-[-1] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
+        <span className='bg-white p-1'>or sign up with your Email</span>
+        <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
       </div>
       <div className='flex flex-col gap-1 opacity-70'>
         {!formik.errors.name ? (
@@ -97,7 +105,7 @@ export default function RegisterForm(props: any) {
           id='name'
           type='text'
           placeholder='Enter your name'
-          className='w-full p-2 rounded-md border border-black focus:outline-[#7f265b]'
+          className='w-full p-2 rounded-md border border-[#B88E2F]  focus:outline-[#e9c162]'
           value={formik.values.name}
           onChange={formik.handleChange}
           required
@@ -116,7 +124,7 @@ export default function RegisterForm(props: any) {
           id='email'
           type='text'
           placeholder='Enter your email'
-          className='w-full p-2 rounded-md border border-black focus:outline-[#7f265b]'
+          className='w-full p-2 rounded-md border border-[#B88E2F]  focus:outline-[#e9c162]'
           value={formik.values.email}
           onChange={formik.handleChange}
           required
@@ -135,7 +143,7 @@ export default function RegisterForm(props: any) {
             id='password'
             type={state.password ? 'text' : 'password'}
             placeholder='Enter your password'
-            className='w-full pl-3 py-2 pr-8 rounded-md border focus:outline-[#7f265b] border-black'
+            className='w-full pl-3 py-2 pr-8 rounded-md border focus:outline-[#e9c162] border-[#B88E2F]'
             value={formik.values.password}
             onChange={formik.handleChange}
             required
@@ -145,9 +153,9 @@ export default function RegisterForm(props: any) {
             onClick={() => dispatch({ type: 'password' })}
           >
             {state.password ? (
-              <EyeIcon className='h-6 w-6 text-[#7f265b]' />
+              <EyeIcon className='h-6 w-6 text-[#B88E2F]' />
             ) : (
-              <EyeSlashIcon className='h-6 w-6 text-[#7f265b]' />
+              <EyeSlashIcon className='h-6 w-6 text-[#B88E2F]' />
             )}
           </div>
         </div>
@@ -167,7 +175,7 @@ export default function RegisterForm(props: any) {
             id='confirmPassword'
             type={state.confirmPassword ? 'text' : 'password'}
             placeholder='Enter your password'
-            className='w-full pl-3 py-2 pr-8 rounded-md border border-black focus:outline-[#7f265b]'
+            className='w-full pl-3 py-2 pr-8 rounded-md border focus:outline-[#e9c162] border-[#B88E2F]'
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
             required
@@ -177,9 +185,9 @@ export default function RegisterForm(props: any) {
             onClick={() => dispatch({ type: 'confirmPassword' })}
           >
             {state.confirmPassword ? (
-              <EyeIcon className='h-6 w-6 text-[#7f265b]' />
+              <EyeIcon className='h-6 w-6 text-[#B88E2F]' />
             ) : (
-              <EyeSlashIcon className='h-6 w-6 text-[#7f265b]' />
+              <EyeSlashIcon className='h-6 w-6 text-[#B88E2F]' />
             )}
           </div>
         </div>
@@ -194,7 +202,7 @@ export default function RegisterForm(props: any) {
               onChange={formik.handleChange}
               id='remember'
               type='checkbox'
-              className="before:content[''] peer relative h-6 w-6 cursor-pointer appearance-none rounded-md border border-gray-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-[#7f265b] checked:bg-[#7f265b] checked:before:bg-[#7f265b] hover:before:opacity-10"
+              className="before:content[''] peer relative h-6 w-6 cursor-pointer appearance-none rounded-md border border-[#B88E2F] transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-[#B88E2F] checked:bg-[#B88E2F] checked:before:bg-[#B88E2F] hover:before:opacity-10"
               name='remember'
             />
             <span className='absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100'>
@@ -219,18 +227,26 @@ export default function RegisterForm(props: any) {
           </label>
           {/* use local storage */}
         </div>
-        <span className='inline-block text-sm text-[#7f265b] hover:opacity-55 cursor-pointer'>Forgot Password?</span>
+        <Link to='/forgotPpass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
+          Forgot Password?
+        </Link>
       </div>
       <button
         type='submit'
         className={
           sendingForm
-            ? 'pointer-events-none bg-[#8b2161] rounded-md flex items-center text-white justify-center py-3'
-            : 'bg-[#7f265b] rounded-md caret-transparent font-semibold text-white py-5 transition-all hover:bg-[#9f3876]'
+            ? 'pointer-events-none bg-[#e1b34a] rounded-md flex items-center text-white justify-center py-3'
+            : 'bg-[#B88E2F] rounded-md caret-transparent font-semibold text-white py-5 transition-all hover:bg-[#e1b34a]'
         }
       >
         {sendingForm ? <CircularProgress color='inherit' /> : 'Create Your Account'}
       </button>
+      <div className='flex gap-1 items-center justify-center mt-3'>
+        <span>Already have an account?</span>
+        <Link to='/login' className='text-[#B88E2F] hover:text-[#e1b34a]'>
+          Login
+        </Link>
+      </div>
     </form>
   )
 }
