@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
 export const ValidationRegisterForm = Yup.object({
-  name: Yup.string().min(7, 'Mininum 7 characters').max(12, 'Maximum 12 characters'),
+  name: Yup.string().min(7, 'Mininum 7 characters').max(15, 'Maximum 15 characters'),
   email: Yup.string().email('Invalid email format'),
   password: Yup.string().matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/,
