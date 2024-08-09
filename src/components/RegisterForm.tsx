@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import http from '~/Api/http'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 const showPassReducer = (
   state: {
     password: boolean
@@ -29,6 +29,11 @@ export default function RegisterForm(props: any) {
     sendingForm: boolean,
     setSendingForm: React.Dispatch<React.SetStateAction<boolean>>
   ] = useState(false)
+  const [existEmail, setExistEmail]: [
+    existEmail: boolean,
+    setExistEmail: React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState(false)
+  console.log(existEmail)
   const nav = useNavigate()
   const formik = useFormik<{
     name: string
@@ -57,11 +62,12 @@ export default function RegisterForm(props: any) {
         const res = await http.post('/auth/register', values)
         console.log(res)
         if (res.status === 201) {
-          nav('/resendEmail')
+          nav('/resendEmail/' + res.data.id)
           setSendingForm(false)
         }
       } catch (err) {
         console.log(err)
+        setExistEmail(true)
         setSendingForm(false)
       }
     } // Add an empty function as the onSubmit property
@@ -93,13 +99,18 @@ export default function RegisterForm(props: any) {
         <span className='bg-white p-1'>or sign up with your Email</span>
         <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
       </div>
-      <div className='flex flex-col gap-1 opacity-70'>
+      <div className='flex flex-col gap-1 opacity-80'>
         {!formik.errors.name ? (
           <label className='cursor-pointer caret-transparent' htmlFor='name'>
             Your Name
           </label>
         ) : (
-          <span className='pointer-events-none text-sm text-red-600 caret-transparent'>{formik.errors.name}</span>
+          <div className='flex items-center gap-2'>
+            <ExclamationCircleIcon className='h-7 w-7 text-red-600' />
+            <span className='pointer-events-none text-sm text-red-600 caret-transparent leading-loose'>
+              {formik.errors.name}
+            </span>
+          </div>
         )}
         <input
           id='name'
@@ -113,20 +124,26 @@ export default function RegisterForm(props: any) {
       </div>
 
       <div className='flex flex-col gap-1 opacity-70'>
-        {!formik.errors.email ? (
+        {!formik.errors.email && !existEmail ? (
           <label className='cursor-pointer caret-transparent' htmlFor='email'>
             Email
           </label>
         ) : (
-          <span className='pointer-events-none text-sm text-red-600 caret-transparent'>{formik.errors.email}</span>
+          <div className='flex items-center gap-2'>
+            <ExclamationCircleIcon className='h-7 w-7 text-red-600' />
+            <span className='leading-loose pointer-events-none text-sm text-red-600 caret-transparent'>{`${formik.errors.email || 'This email address already exists'}`}</span>
+          </div>
         )}
         <input
           id='email'
           type='text'
           placeholder='Enter your email'
-          className='w-full p-2 rounded-md border border-[#B88E2F]  focus:outline-[#e9c162]'
+          className={`w-full p-2 rounded-md border ${existEmail ? 'border-red-500' : 'border-[#B88E2F]'}  focus:outline-[#e9c162]`}
           value={formik.values.email}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.handleChange(e)
+            setExistEmail(false)
+          }}
           required
         />
       </div>
@@ -136,7 +153,12 @@ export default function RegisterForm(props: any) {
             Password
           </label>
         ) : (
-          <span className='pointer-events-none text-sm text-red-600 caret-transparent'>{formik.errors.password}</span>
+          <div className='flex items-center gap-2'>
+            <ExclamationCircleIcon className='h-7 w-7 text-red-600' />
+            <span className='leading-loose pointer-events-none text-sm text-red-600 caret-transparent'>
+              {formik.errors.password}
+            </span>
+          </div>
         )}
         <div className='relative'>
           <input
@@ -166,9 +188,12 @@ export default function RegisterForm(props: any) {
             Confirm Password
           </label>
         ) : (
-          <span className='pointer-events-none text-sm text-red-600 caret-transparent'>
-            {formik.errors.confirmPassword}
-          </span>
+          <div className='flex items-center gap-2'>
+            <ExclamationCircleIcon className='h-7 w-7 text-red-600' />
+            <span className='leading-loose pointer-events-none text-sm text-red-600 caret-transparent'>
+              {formik.errors.confirmPassword}
+            </span>
+          </div>
         )}
         <div className='relative'>
           <input

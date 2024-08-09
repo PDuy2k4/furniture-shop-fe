@@ -10,7 +10,7 @@ function App() {
   return (
     <Routes>
       <Route path='/register' element={<RegisterPage isTablet={isTablet} isMobile={isMobile} />} />
-      <Route path='/resendEmail' element={<ResendEmailPage />} />
+      <Route path='/resendEmail/:id' element={<ResendEmailPage />} />
     </Routes>
   )
 }
