@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <React.StrictMode>
       <Provider store={store}>
-        <RegisterPage />
+        <LoginPage />
       </Provider>
     </React.StrictMode>
   </BrowserRouter>

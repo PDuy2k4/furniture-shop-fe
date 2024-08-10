@@ -1,7 +1,54 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import google from '../assets/google.svg'
+import show from '../assets/show.png'
+import hide from '../assets/hide.png'
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const changeShowPasswordIcon = useCallback(() => {
+    setShowPassword((prevShowPassword) => !prevShowPassword)
+  }, [])
+
+  const handleLogin = async () => {
+    if (email === '') {
+      alert('Fill in email')
+      return
+    }
+    if (password === '') {
+      alert('Fill in password')
+      return
+    }
+    try {
+      const response = await fetch('http://localhost:8000/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      })
+      const data = await response.json()
+      console.log('Response:', response)
+      console.log('Data:', data)
+      if (response.ok) {
+        // Handle successful login (e.g., redirect to another page)
+        console.log('Login successful:', data)
+      } else {
+        // Handle login error
+        console.error('Login failed:', data)
+        alert(`Login failed: ${data.message || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('An error occurred. Please try again later.')
+    }
+  }
+
   return (
     <div className='w-full h-screen flex items-center justify-center bg-slate-300'>
       <div className=' max-w-[960px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px]'>
@@ -15,16 +62,13 @@ export default function LoginPage() {
             />
           </div>
           <div className='flex flex-col items-stretch justify-between w-[45%] pt-10 pb-1 px-12 rounded-[34px]'>
-              <div className='flex flex-col items-stretch justify-center'>
+            <div className='flex flex-col items-stretch justify-center'>
               <h2 className='text-3xl text-[#525252] font-bold leading-5 mb-3'>Login to your account</h2>
               <p className='text-xs font-normal text-[#b9b9b9] mb-5'>See what is going on with your business</p>
 
               <div className='group gap-3 hover:bg-slate-200 hover:cursor-pointer flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'>
-              <img 
-                src='https://cdn-icons-png.flaticon.com/128/300/300221.png' 
-                className='inline-block w-5 h-5' 
-                alt='Google-icon' />                
-              <span className='inline-block text-xs text-[#828282] font-bold'>Continue with google</span>
+                <img src={google} className='inline-block w-5 h-5' alt='Google-icon' />
+                <span className='inline-block text-xs text-[#828282] font-bold'>Continue with google</span>
               </div>
 
               <p className='my-6 text-xs text-center text-[#A1A1A1] font-semibold'>
@@ -35,6 +79,10 @@ export default function LoginPage() {
                 <label className='block mb-[10px]'>
                   <span className='block text-sm text-[#828282] font-semibold'>Email</span>
                   <input
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value)
+                    }}
                     type='email'
                     className='peer mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-[#7F265B] focus:ring-[#7F265B] block w-full rounded-md sm:text-sm focus:ring-1'
                     placeholder='you@example.com'
@@ -44,12 +92,22 @@ export default function LoginPage() {
                   </p>
                 </label>
                 <label className='block text-sm text-[#828282] font-semibold mb-1'>
-                  <span className='block'>Password</span>
+                  <span className='block text-sm text-[#828282] font-semibold '>Password</span>
                   <input
-                    type='password'
+                    id='passwordInput'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder='Enter password'
+                    type={showPassword ? 'text' : 'password'}
                     className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 focus:outline-none focus:border-[#7F265B] focus:ring-[#7F265B] block w-full rounded-md sm:text-sm focus:ring-1'
                   />
+                  <button type='button' className='absolute right-2 top-[50%] ' onClick={changeShowPasswordIcon}>
+                    <img
+                      src={showPassword ? hide : show}
+                      className='inline-block rounded-[100rem] w-5 h-5 hover:bg-slate-200'
+                      alt='Toggle password visibility'
+                    />
+                  </button>
                 </label>
                 <div className='flex items-center justify-between mt-1 mb-7'>
                   <label className='flex items-center justify-center gap-1'>
@@ -60,19 +118,23 @@ export default function LoginPage() {
                     Forgot password?
                   </a>
                 </div>
-              <button className='block w-full py-[10px] px[8px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'>Login</button>
+                <button
+                  onClick={handleLogin}
+                  className='block w-full py-[10px] px[8px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'
+                >
+                  Login
+                </button>
               </form>
-
-              </div>
-              <div className='flex justify-center gap-2 items-center'>
-                <span className='text-xs text-[#828282] font-normal text-[#7F265B]'>Not register yet? </span>
-                <a className='inline-block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
-                    Create an account
-                  </a>
-              </div>
+            </div>
+            <div className='flex justify-center gap-2 items-center'>
+              <span className='text-xs text-[#828282] font-normal text-[#7F265B]'>Not register yet? </span>
+              <a className='inline-block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
+                Create an account
+              </a>
             </div>
           </div>
         </div>
       </div>
+    </div>
   )
 }
