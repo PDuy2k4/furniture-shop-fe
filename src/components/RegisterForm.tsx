@@ -63,6 +63,10 @@ export default function RegisterForm(props: any) {
         console.log(res)
         if (res.status === 201) {
           nav('/resendEmail/' + res.data.id)
+          if (values.remember) {
+            localStorage.setItem('user', JSON.stringify(values))
+          }
+          console.log(localStorage.getItem('user'))
           setSendingForm(false)
         }
       } catch (err) {

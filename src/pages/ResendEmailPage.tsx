@@ -1,12 +1,22 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, memo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import http from '~/Api/http'
-export default function ResendEmailPage() {
+import { useNavigate } from 'react-router-dom'
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead'
+
+const ResendEmailPage = function () {
+  const nav = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const random = useRef(0)
   const [sending, setSending] = useState(true)
-  const [random, setRandom] = useState(0)
-  useLayoutEffect(() => {
+  const hasCalledApi = useRef(false) // useRef để lưu trữ trạng thái gọi API
+
+  useEffect(() => {
+    if (hasCalledApi.current === false) {
+      hasCalledApi.current = true
+      return
+    } // Đánh dấu API đã được gọi
     const resendEmail = async () => {
       try {
         const response = await http.post('/auth/sendVerifiedEmail', { _id: id })
@@ -16,11 +26,12 @@ export default function ResendEmailPage() {
         }
       } catch (error) {
         setSending(false)
-        console.log(error)
+        nav('/verify-email/' + id)
       }
     }
     resendEmail()
-  }, [random, id])
+  }, [id, nav, random.current])
+
   return (
     <div className='body-container'>
       <div className='flex flex-col gap-4 mt-auto h-screen justify-center caret-transparent'>
@@ -33,7 +44,15 @@ export default function ResendEmailPage() {
           </div>
         ) : (
           <>
-            <h1 className='text-4xl font-bold text-center text-[#B88E2F]'>
+            <div className='text-center'>
+              <MarkEmailReadIcon
+                sx={{
+                  fontSize: 180,
+                  color: '#B88E2F'
+                }}
+              />
+            </div>
+            <h1 className='text-3xl font-bold text-center text-[#B88E2F]'>
               A Verification Email has been sent to your email
             </h1>
             <div className='flex flex-col items-center gap-4'>
@@ -47,8 +66,10 @@ export default function ResendEmailPage() {
               </p>
               <button
                 onClick={() => {
+                  random.current = Math.random()
+
                   setSending(true)
-                  setRandom(Math.random())
+                  // Reset trạng thái để cho phép gọi lại API
                 }}
                 id='buttonResend'
                 className='text-white font-semibold px-4 py-3 rounded-md bg-[#B88E2F] hover:bg-[#dcaf44]'
@@ -68,3 +89,5 @@ export default function ResendEmailPage() {
     </div>
   )
 }
+
+export default memo(ResendEmailPage)
