@@ -7,12 +7,12 @@ import store from './Redux/store.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import LoginPage from './pages/loginPage.tsx'
 import RegisterPage from './pages/registerPage.tsx'
-import VerifiedEmail from './pages/verifiedEmail.tsx'
+import ForgotPassword from './pages/forgotPassword.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <React.StrictMode>
       <Provider store={store}>
-        <VerifiedEmail />
+        <RegisterPage />
       </Provider>
     </React.StrictMode>
   </BrowserRouter>
