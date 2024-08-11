@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import google from '../assets/google.svg'
 import show from '../assets/show.png'
 import hide from '../assets/hide.png'
+import dotenv from 'dotenv'
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -62,10 +63,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className='w-full h-screen flex items-center justify-center bg-slate-300'>
-      <div className=' max-w-[500px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] py-14 px-12'>
+    <div className='relative w-full h-screen flex items-center justify-center bg-slate-300 bg-cover bg-right lg:bg-center bg-[url(https://images.pexels.com/photos/37347/office-sitting-room-executive-sitting.jpg?auto=compress&cs=tinysrgb&w=600https://images.pexels.com/photos/7939863/pexels-photo-7939863.jpeg?auto=compress&cs=tinysrgb&w=600)]'>
+      <div className='absolute z-[2] py-10 px-5 lg:py-14 lg:px-12 max-w-[330px] sm:max-w-[450px] md:max-w-[500px] lg:max-w-[550px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] '>
         <div className='flex flex-col items-stretch justify-center w-full rounded-[34px]'>
-          <h2 className='text-3xl text-[#525252] font-bold leading-5 mb-3 text-center'>Create Your Account</h2>
+          <h2 className='text-2xl sm:text-[27px] lg:text-3xl text-[#525252] font-bold leading-5 mb-3 text-center'>
+            Create Your Account
+          </h2>
           <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>Welcome back, please enter your detail</p>
 
           <div className='group gap-3 hover:bg-slate-200 hover:cursor-pointer flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'>
@@ -73,7 +76,7 @@ export default function RegisterPage() {
             <span className='inline-block text-xs text-[#828282] font-bold'>Continue with google</span>
           </div>
 
-          <p className='my-5 text-xs text-center text-[#A1A1A1] font-semibold'>
+          <p className='my-4 lg:my-6 text-xs text-center text-[#A1A1A1] font-semibold'>
             ------------- or Sign up with Email -------------
           </p>
 
@@ -141,7 +144,10 @@ export default function RegisterPage() {
             </label>
           </form>
 
-          <button onClick={handleRegister} className='block w-full py-[10px] px[8px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'>
+          <button
+            onClick={handleRegister}
+            className='block w-full py-[10px] px[8px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'
+          >
             Register
           </button>
         </div>
