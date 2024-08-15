@@ -2,13 +2,13 @@ import { useState, useCallback } from 'react'
 import google from '../assets/google.svg'
 import show from '../assets/show.png'
 import hide from '../assets/hide.png'
-import RegisterPage from './registerPage'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const changeShowPasswordIcon = useCallback(() => {
     setShowPassword((prevShowPassword) => !prevShowPassword)
@@ -24,7 +24,7 @@ export default function LoginPage() {
       return
     }
     try {
-      const response = await fetch('http://localhost:8000/v1/auth/register', {
+      const response = await fetch('http://localhost:8000/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -35,28 +35,27 @@ export default function LoginPage() {
         })
       })
       const data = await response.json()
-      console.log('Response:', response)
-      console.log('Data:', data)
+      alert(response)
+      
       if (response.ok) {
         // Handle successful login (e.g., redirect to another page)
         console.log('Login successful:', data)
+        navigate('/home')
       } else {
         // Handle login error
-        console.error('Login failed:', data)
-        alert(`Login failed: ${data.message || 'Unknown error'}`)
+        console.log('Login failed:', data)
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('An error occurred. Please try again later.')
     }
   }
 
   return (
     <div className='relative w-full h-screen flex items-center justify-center bg-slate-300'>
-     <img 
+      <img
         src='https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGZ1cm5pdHVyZXxlbnwwfHwwfHx8MA%3D%3D'
-        alt="funitute" 
-        className='lg:hidden absolute top-0 left-0 w-full h-full object-center object-cover z-0' 
+        alt='funitute'
+        className='lg:hidden absolute top-0 left-0 w-full h-full object-center object-cover z-0'
       />
       <div className='max-w-[320px] sm:max-w-[580px] lg:max-w-[850px] w-full max-h-[600px] m-auto z-[2] bg-[#ffffff] rounded-[34px] im'>
         <div className='flex items-stretch justify-center p-[8px]'>
@@ -70,8 +69,12 @@ export default function LoginPage() {
           </div>
           <div className='px-3 lg:px-8  w-[100%] lg:w-[45%] flex flex-col items-stretch justify-between pt-10 pb-1 rounded-[34px]'>
             <div className='flex flex-col items-stretch justify-center'>
-              <h2 className='text-center lg:text-left mb-2 lg:mb-3 text-2xl lg:text-3xl lg:text-[28px] text-[#525252] font-bold leading-5'>Login to your account</h2>
-              <p className='text-center lg:text-left text-xs font-normal text-[#b9b9b9] mb-5'>See what is going on with your business</p>
+              <h2 className='text-center lg:text-left mb-2 lg:mb-3 text-2xl lg:text-3xl lg:text-[28px] text-[#525252] font-bold leading-5'>
+                Login to your account
+              </h2>
+              <p className='text-center lg:text-left text-xs font-normal text-[#b9b9b9] mb-5'>
+                See what is going on with your business
+              </p>
 
               <div className='group gap-3 hover:bg-slate-200 hover:shadow-md hover:cursor-pointer flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'>
                 <img src={google} className='inline-block w-5 h-5' alt='Google-icon' />
@@ -101,7 +104,6 @@ export default function LoginPage() {
                 <label className='relative block mb-1'>
                   <span className='block text-sm text-[#828282] font-semibold '>Password</span>
                   <input
-                    id='passwordInput'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder='Enter password'
@@ -126,7 +128,10 @@ export default function LoginPage() {
                   </a>
                 </div>
                 <button
-                  onClick={handleLogin}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleLogin()
+                  }}
                   className='mb-4 lg:mb-0 block w-full py-[10px] px[8px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'
                 >
                   Login
@@ -135,11 +140,9 @@ export default function LoginPage() {
             </div>
             <div className='flex justify-center gap-2 items-center'>
               <span className='text-xs text-[#828282] font-normal'>Not register yet? </span>
-              <a className='inline-block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
-              <Link to="/register"  className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
+              <Link to='/register' className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
                 Create an account
               </Link>
-              </a>
             </div>
           </div>
         </div>

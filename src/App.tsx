@@ -1,10 +1,18 @@
+
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import RegisterPage from './pages/RegisterPage'
+import { Route, Routes } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
 function App() {
+
   return (
-    <>
-      <div className='h-screen flex justify-center items-center'>
-        <span className='font-bold text-red-500 text-xl'>Hello</span>
-      </div>
-    </>
+    <Routes>
+      <Route path='/register' element={<RegisterPage/>} />
+      <Route path='/forgotpassword/:id' element={<ForgotPasswordPage />} />
+      <Route path='/login' element={<LoginPage/>} />
+      <Route path='/home' element={<HomePage/>} />
+    </Routes>
   )
 }
 

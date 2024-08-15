@@ -4,6 +4,7 @@ import show from '../assets/show.png'
 import hide from '../assets/hide.png'
 import back from '../assets/back.png'
 import dotenv from 'dotenv'
+import { Link } from 'react-router-dom'
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -51,13 +52,7 @@ export default function RegisterPage() {
         })
       })
       const data = await response.json()
-      if (response.ok) {
-        // Handle successful registration (e.g., redirect to login page)
-        console.log('Registration successful:', data)
-      } else {
-        // Handle registration error
-        console.error('Registration failed:', data)
-      }
+
     } catch (error) {
       console.error('Error:', error)
     }
@@ -86,10 +81,10 @@ export default function RegisterPage() {
               <span className='block text-sm text-[#828282] font-semibold'>Full Name</span>
               <input
                 type='text'
+                placeholder='Enter full name'
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className=' mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-[#7F265B] focus:ring-[#7F265B] block w-full rounded-md sm:text-sm focus:ring-1'
-                placeholder='you@example.com'
               />
             </label>
 
@@ -152,9 +147,11 @@ export default function RegisterPage() {
             Register
           </button>
           <div className='mx-auto w-fit flex items-center justify-center gap-2 hover:cursor-pointer'>
-            <img className='block w-5 h-5' src={back} alt="back_icon" />
-            <a className='block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
-                Back to log in
+            <a className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
+                <Link to='/login' className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
+                  <img className='inline-block w-5 h-5 mr-2' src={back} alt='back_icon' />
+                  Back to login
+                </Link>
             </a>
           </div>
         </div>

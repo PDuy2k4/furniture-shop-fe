@@ -12,9 +12,7 @@ export default function ForgotPassword() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-
-        })
+        body: JSON.stringify({})
       })
       const data = await response.json()
       if (response.ok) {
@@ -36,9 +34,11 @@ export default function ForgotPassword() {
           <h2 className='text-2xl sm:text-[27px] lg:text-3xl text-[#525252] font-bold leading-5 mb-3 text-center'>
             Forgot Password?
           </h2>
-          <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>No worries, we'll send you reset instructions.</p>
+          <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>
+            No worries, we'll send you reset instructions.
+          </p>
           <form>
-          <label className='block mb-[10px]'>
+            <label className='block mb-[10px]'>
               <span className='block text-sm text-[#828282] font-semibold'>Email</span>
               <input
                 type='email'
@@ -60,9 +60,9 @@ export default function ForgotPassword() {
             Reset password
           </button>
           <div className='mx-auto w-fit flex items-center justify-center gap-2 hover:cursor-pointer'>
-            <img className='block w-5 h-5' src={back} alt="back_icon" />
+            <img className='block w-5 h-5' src={back} alt='back_icon' />
             <a className='block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
-                Back to log in
+              Back to log in
             </a>
           </div>
         </div>
