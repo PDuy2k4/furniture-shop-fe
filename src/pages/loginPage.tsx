@@ -35,15 +35,14 @@ export default function LoginPage() {
         })
       })
       const data = await response.json()
-      alert(response)
-      
-      if (response.ok) {
-        // Handle successful login (e.g., redirect to another page)
-        console.log('Login successful:', data)
-        navigate('/home')
+
+      if (response.status >= 200 && response.status < 300) {
+        // Handle successful registration
+        console.log('Login successfully')
       } else {
-        // Handle login error
-        console.log('Login failed:', data)
+        // Handle registration error
+        console.log('Registration failed:', data.message)
+        // Handle error data appropriately (see point 2 below)
       }
     } catch (error) {
       console.error('Error:', error)
