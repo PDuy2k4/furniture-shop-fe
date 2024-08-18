@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import googleIcon from '../assets/google-icon.svg'
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
@@ -7,14 +6,17 @@ import CircularProgress from '@mui/material/CircularProgress'
 import http from '~/Api/http'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-
-export default function LoginForm(props: any) {
+import { loginStart, loginSuccess, loginFailure } from '~/Redux/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '~/Redux/store'
+import OAuth from './OAuth'
+export default function LoginForm({ isMobile }: { isMobile: boolean }) {
   const registeredUser = JSON.parse(localStorage.getItem('user')?.toString() || 'null')
   console.log(registeredUser)
-  const [sendingForm, setSendingForm]: [
-    sendingForm: boolean,
-    setSendingForm: React.Dispatch<React.SetStateAction<boolean>>
-  ] = useState(false)
+  const nav = useNavigate()
+  const { sendingForm } = useSelector((state: RootState) => state.user)
+
+  const dispatch = useDispatch()
 
   const formik = useFormik<{
     email: string
@@ -27,28 +29,35 @@ export default function LoginForm(props: any) {
       remember: true
     },
     validationSchema: ValidationRegisterForm,
-    onSubmit: async (values: { email: string; password: string; remember: boolean }) => {} // Add an empty function as the onSubmit property
+    onSubmit: async (values: { email: string; password: string; remember: boolean }) => {
+      try {
+        dispatch(loginStart())
+        const response = await http.post('/auth/login', values)
+        console.log(response)
+        dispatch(loginSuccess(response.data.userWithoutPassword))
+        nav('/home')
+      } catch (err) {
+        console.log(err)
+        dispatch(loginFailure(err))
+      }
+    } // Add an empty function as the onSubmit property
   })
 
   const [showPass, setShowPass] = useState(false)
 
   return (
     <form
-      className={`min-w-[40vh] ${props.isMobile && 'justify-between min-h-screen w-screen'} p-8 flex flex-col ${!props.isMobile ? 'gap-2' : 'gap-1'}`}
+      className={`min-w-[40vh] ${isMobile && 'justify-between min-h-screen w-screen'} p-8 flex flex-col ${isMobile ? 'gap-2' : 'gap-1'}`}
       onSubmit={formik.handleSubmit}
     >
-      <h1 className={`${!props.isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal caret-transparent`}>
+      <h1 className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal caret-transparent`}>
         Login to your Account
       </h1>
       <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
         See what is going on with your business
       </span>
-      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-[#dcac3b] cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#e9c162]'>
-        <div className='flex gap-4 items-center'>
-          <img src={googleIcon} alt='' />
-          <span className='font-medium'>Continue with Google</span>
-        </div>
-      </div>
+
+      <OAuth />
       <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
         <span className='bg-white p-1'>or Sign in with Email</span>
         <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
@@ -100,7 +109,7 @@ export default function LoginForm(props: any) {
       </div>
 
       <div
-        className={`${props.isMobile ? 'flex flex-col items-start caret-transparent' : 'flex caret-transparent justify-between items-center'}`}
+        className={`${isMobile ? 'flex flex-col items-start caret-transparent' : 'flex caret-transparent justify-between items-center'}`}
       >
         <div className='inline-flex ml-[-12px] items-center'>
           <label className='relative flex items-center p-3 rounded-full cursor-pointer' htmlFor='remember'>
@@ -133,7 +142,7 @@ export default function LoginForm(props: any) {
             Remember me
           </label>
         </div>
-        <Link to='/forgotPpass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
+        <Link to='/forgotPassword' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
           Forgot Password?
         </Link>
       </div>

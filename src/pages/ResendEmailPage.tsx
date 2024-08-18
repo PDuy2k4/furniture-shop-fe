@@ -1,36 +1,50 @@
-import React, { useEffect, useState, useRef, memo } from 'react'
+import { useState, useRef, memo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import http from '~/Api/http'
 import { useNavigate } from 'react-router-dom'
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead'
+import { useLocation } from 'react-router-dom'
 
 const ResendEmailPage = function () {
-  const nav = useNavigate()
-  const { id } = useParams<{ id: string }>()
-  const random = useRef(0)
-  const [sending, setSending] = useState(true)
-  const hasCalledApi = useRef(false) // useRef để lưu trữ trạng thái gọi API
+  const { id, navFrom } = useParams<{ id: string; navFrom: string }>()
+  const location = useLocation()
 
-  useEffect(() => {
+  const nav = useNavigate()
+  const [sending, setSending] = useState(false)
+  const hasCalledApi = useRef(false) // useRef để lưu trữ trạng thái gọi API
+  const handleResendEmail = async () => {
     if (hasCalledApi.current === false) {
       hasCalledApi.current = true
       return
     } // Đánh dấu API đã được gọi
     const resendEmail = async () => {
       try {
-        const response = await http.post('/auth/sendVerifiedEmail', { _id: id })
-        if (response.status === 201) {
-          setSending(false)
+        setSending(true)
+        if (hasCalledApi.current === false) {
+          hasCalledApi.current = true
+          return
+        } // Đánh dấu API đã được gọi
+        let response
+        if (navFrom === 'register') {
+          response = await http.post('/auth/sendVerificationEmail', { _id: id })
+        } else {
+          const { email } = location.state
+          response = await http.post('/auth/forgotPassword', { email })
+        }
+        if (response.status === 200) {
           console.log('Email Sent')
         }
+        setSending(false)
       } catch (error) {
         setSending(false)
-        nav('/verify-email/' + id)
+        if (navFrom === 'register') {
+          nav('/verifyEmail/' + id)
+        }
       }
     }
     resendEmail()
-  }, [id, nav, random.current])
+  }
 
   return (
     <div className='body-container'>
@@ -66,9 +80,8 @@ const ResendEmailPage = function () {
               </p>
               <button
                 onClick={() => {
-                  random.current = Math.random()
+                  handleResendEmail()
 
-                  setSending(true)
                   // Reset trạng thái để cho phép gọi lại API
                 }}
                 id='buttonResend'

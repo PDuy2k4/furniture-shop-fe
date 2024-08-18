@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.scss'
 import { Provider } from 'react-redux'
-import store from './Redux/store.tsx'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistor, store } from './Redux/store.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <React.StrictMode>
       <Provider store={store}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
       </Provider>
     </React.StrictMode>
   </BrowserRouter>

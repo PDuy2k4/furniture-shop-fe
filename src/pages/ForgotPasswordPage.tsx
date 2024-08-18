@@ -1,6 +1,7 @@
-import LoginForm from '~/components/LoginForm'
+import ForgotPasswordForm from '~/components/ForgotPasswordForm'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function LoginPage({ isMobile, isTablet }: { isMobile: boolean; isTablet: boolean }) {
+export default function ForgotPasswordPage({ isMobile, isTablet }: { isMobile: boolean; isTablet: boolean }) {
   // fix error of mail verification
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-[#f3f3f3]'>
@@ -15,7 +16,7 @@ export default function LoginPage({ isMobile, isTablet }: { isMobile: boolean; i
               />
             </div>
           )}
-          <LoginForm isMobile={isMobile} />
+          <ForgotPasswordForm isMobile={isMobile} />
         </div>
       </div>
     </div>

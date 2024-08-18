@@ -19,7 +19,7 @@ export default function VerifiedEmailPage() {
     }
     const verifyEmail = async () => {
       try {
-        const response = await http.post('/auth/verifyEmail', { token })
+        const response = await http.post('/auth/verify', { token })
         setLoading(false)
         if (response.status === 201) {
           setSuccess(true)
@@ -28,7 +28,7 @@ export default function VerifiedEmailPage() {
       } catch (error: any) {
         setLoading(false)
         const errMsg = error.response.data.message
-        if (errMsg === 'Email is already verified') setRegistered(true)
+        if (errMsg === 'User already verified!') setRegistered(true)
         setSuccess(false)
         setMessage(errMsg)
       }

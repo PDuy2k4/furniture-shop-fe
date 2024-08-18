@@ -1,5 +1,4 @@
 import React, { useReducer, useState } from 'react'
-import googleIcon from '../assets/google-icon.svg'
 import { useFormik } from 'formik'
 import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
@@ -8,6 +7,7 @@ import http from '~/Api/http'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import OAuth from './OAuth'
 const showPassReducer = (
   state: {
     password: boolean
@@ -24,7 +24,8 @@ const showPassReducer = (
       return state
   }
 }
-export default function RegisterForm(props: any) {
+
+export default function RegisterForm({ isMobile }: { isMobile: boolean }) {
   const [sendingForm, setSendingForm]: [
     sendingForm: boolean,
     setSendingForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -62,13 +63,17 @@ export default function RegisterForm(props: any) {
         const res = await http.post('/auth/register', values)
         console.log(res)
         if (res.status === 201) {
-          nav('/resendEmail/' + res.data.id)
-          if (values.remember) {
-            localStorage.setItem('user', JSON.stringify(values))
+          const sendVerificationEmailRes = await http.post('/auth/sendVerificationEmail', { _id: res.data.id })
+          console.log(sendVerificationEmailRes)
+          if (sendVerificationEmailRes.status === 200) {
+            nav('/resendEmail/' + 'register/' + res.data.id)
+            if (values.remember) {
+              localStorage.setItem('user', JSON.stringify(values))
+            }
+            console.log(localStorage.getItem('user'))
           }
-          console.log(localStorage.getItem('user'))
-          setSendingForm(false)
         }
+        setSendingForm(false)
       } catch (err) {
         console.log(err)
         setExistEmail(true)
@@ -84,21 +89,17 @@ export default function RegisterForm(props: any) {
 
   return (
     <form
-      className={`min-w-[40vh] ${props.isMobile && 'justify-between min-h-screen w-screen'} p-8 flex flex-col ${!props.isMobile ? 'gap-2' : 'gap-1'}`}
+      className={`min-w-[40vh] ${isMobile && 'justify-between min-h-screen w-screen'} p-8 flex flex-col ${isMobile ? 'gap-2' : 'gap-1'}`}
       onSubmit={formik.handleSubmit}
     >
-      <h1 className={`${!props.isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal caret-transparent`}>
+      <h1 className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold leading-normal caret-transparent`}>
         Sign up your Account
       </h1>
       <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
         See what is going on with your business
       </span>
-      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-[#dcac3b] cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#e9c162]'>
-        <div className='flex gap-4 items-center'>
-          <img src={googleIcon} alt='' />
-          <span className='font-medium'>Sign up with Google</span>
-        </div>
-      </div>
+
+      <OAuth />
       <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
         <span className='bg-white p-1'>or sign up with your Email</span>
         <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
@@ -222,7 +223,7 @@ export default function RegisterForm(props: any) {
         </div>
       </div>
       <div
-        className={`${props.isMobile ? 'flex flex-col items-start caret-transparent' : 'flex caret-transparent justify-between items-center'}`}
+        className={`${isMobile ? 'flex flex-col items-start caret-transparent' : 'flex caret-transparent justify-between items-center'}`}
       >
         <div className='inline-flex ml-[-12px] items-center'>
           <label className='relative flex items-center p-3 rounded-full cursor-pointer' htmlFor='remember'>

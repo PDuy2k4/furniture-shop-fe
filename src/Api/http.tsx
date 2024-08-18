@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { Axios } from 'axios'
 
 class Http {
   instance: Axios
   constructor() {
     this.instance = axios.create({
-      baseURL: import.meta.env.VITE_SERVER_URL,
+      baseURL: 'http://localhost:8000/api',
       timeout: 10000
     })
   }

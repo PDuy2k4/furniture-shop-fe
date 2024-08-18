@@ -1,7 +1,16 @@
-import LoginForm from '~/components/LoginForm'
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function LoginPage({ isMobile, isTablet }: { isMobile: boolean; isTablet: boolean }) {
+import { useParams } from 'react-router-dom'
+import ResetPasswordForm from '~/components/ResetPasswordForm'
+import { useNavigate } from 'react-router-dom'
+
+export default function ResetPasswordPage({ isMobile, isTablet }: { isMobile: boolean; isTablet: boolean }) {
   // fix error of mail verification
+  const { forgotPasswordToken } = useParams<{ forgotPasswordToken: string }>()
+  const nav = useNavigate()
+  if (!forgotPasswordToken) {
+    nav('/')
+    return null
+  }
+
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-[#f3f3f3]'>
       <div className='rounded-lg px-6 py-4 bg-white'>
@@ -15,7 +24,7 @@ export default function LoginPage({ isMobile, isTablet }: { isMobile: boolean; i
               />
             </div>
           )}
-          <LoginForm isMobile={isMobile} />
+          <ResetPasswordForm isMobile={isMobile} token={forgotPasswordToken} />
         </div>
       </div>
     </div>
