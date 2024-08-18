@@ -3,13 +3,16 @@ import DoneAllIcon from '@mui/icons-material/DoneAll'
 import NewReleasesIcon from '@mui/icons-material/NewReleases'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import http from '~/Api/http'
+import http from '~/api/http'
 import { CircularProgress } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { verifyUser } from '~/Redux/slices/userSlice'
 export default function VerifiedEmailPage() {
   const [success, setSuccess] = React.useState(true)
   const [message, setMessage] = React.useState('')
   const [loading, setLoading] = React.useState(true)
   const [registered, setRegistered] = React.useState(false)
+  const dispatch = useDispatch()
   const { token } = useParams<{ token: string }>()
   const hasCalledApi = useRef(false)
   useLayoutEffect(() => {
@@ -24,6 +27,7 @@ export default function VerifiedEmailPage() {
         if (response.status === 201) {
           setSuccess(true)
           setMessage('Email Verified')
+          dispatch(verifyUser({ verify: 1 }))
         }
       } catch (error: any) {
         setLoading(false)

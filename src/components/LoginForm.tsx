@@ -1,21 +1,19 @@
 import React, { useState } from 'react'
-import googleIcon from '../assets/google-icon.svg'
 import { useFormik } from 'formik'
-import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
 import CircularProgress from '@mui/material/CircularProgress'
-import http from '~/Api/http'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '~/Redux/slices/userSlice'
+import http from '~/api/http'
+import LoginWithGoogle from './LoginWithGoogle'
 export default function LoginForm(props: any) {
   const registeredUser = JSON.parse(localStorage.getItem('user')?.toString() || 'null')
-  console.log(registeredUser)
-  const [sendingForm, setSendingForm]: [
-    sendingForm: boolean,
-    setSendingForm: React.Dispatch<React.SetStateAction<boolean>>
-  ] = useState(false)
-
+  const [errMsg, setErrMsg] = useState('')
+  const [sending, setSending] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const formik = useFormik<{
     email: string
     password: string
@@ -26,8 +24,21 @@ export default function LoginForm(props: any) {
       password: registeredUser?.password || '',
       remember: true
     },
-    validationSchema: ValidationRegisterForm,
-    onSubmit: async (values: { email: string; password: string; remember: boolean }) => {} // Add an empty function as the onSubmit property
+    onSubmit: async (values: { email: string; password: string; remember: boolean }) => {
+      setSending(true)
+      try {
+        const res = await http.post('/auth/login', values)
+        dispatch(login(res.data))
+        setSending(false)
+        navigate('/')
+      } catch (err: any) {
+        const errRes = err.response.data.message
+        console.log(errRes)
+        setErrMsg(errRes)
+        setSending(false)
+      }
+      // Add an empty function as the onSubmit property
+    }
   })
 
   const [showPass, setShowPass] = useState(false)
@@ -43,12 +54,7 @@ export default function LoginForm(props: any) {
       <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
         See what is going on with your business
       </span>
-      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-[#dcac3b] cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#e9c162]'>
-        <div className='flex gap-4 items-center'>
-          <img src={googleIcon} alt='' />
-          <span className='font-medium'>Continue with Google</span>
-        </div>
-      </div>
+      <LoginWithGoogle />
       <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
         <span className='bg-white p-1'>or Sign in with Email</span>
         <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
@@ -133,19 +139,22 @@ export default function LoginForm(props: any) {
             Remember me
           </label>
         </div>
-        <Link to='/forgotPpass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
+        <Link to='/forgotPass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
           Forgot Password?
         </Link>
       </div>
+
+      <span className={`text-red-500 text-sm ${errMsg !== '' ? 'visible' : ''}`}>{errMsg}</span>
+
       <button
         type='submit'
         className={
-          sendingForm
+          sending
             ? 'pointer-events-none bg-[#e1b34a] rounded-md flex items-center text-white justify-center py-3'
             : 'bg-[#B88E2F] rounded-md caret-transparent font-semibold text-white py-5 transition-all hover:bg-[#e1b34a]'
         }
       >
-        {sendingForm ? <CircularProgress color='inherit' /> : 'Login'}
+        {sending ? <CircularProgress color='inherit' /> : 'Login'}
       </button>
       <div className='flex gap-1 items-center justify-center mt-3'>
         <span>Not Registered Yet?</span>

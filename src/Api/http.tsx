@@ -5,7 +5,8 @@ class Http {
   constructor() {
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_SERVER_URL,
-      timeout: 10000
+      timeout: 10000,
+      withCredentials: true
     })
   }
   get(url: string) {

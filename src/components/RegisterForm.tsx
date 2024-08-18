@@ -4,10 +4,11 @@ import { useFormik } from 'formik'
 import { ValidationRegisterForm } from '~/constants/ValidationRegisterForm'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
 import CircularProgress from '@mui/material/CircularProgress'
-import http from '~/Api/http'
+import http from '~/api/http'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import LoginWithGoogle from './LoginWithGoogle'
 const showPassReducer = (
   state: {
     password: boolean
@@ -93,12 +94,7 @@ export default function RegisterForm(props: any) {
       <span className='text-sm inline-block mb-1 opacity-75 caret-transparent'>
         See what is going on with your business
       </span>
-      <div className='caret-transparent py-2 flex items-center justify-center rounded-md border-[3px] border-[#dcac3b] cursor-pointer hover:bg-slate-100 hover:border-[3px] hover:border-[#e9c162]'>
-        <div className='flex gap-4 items-center'>
-          <img src={googleIcon} alt='' />
-          <span className='font-medium'>Sign up with Google</span>
-        </div>
-      </div>
+      <LoginWithGoogle />
       <div className='opacity-50 flex items-center justify-center relative caret-transparent'>
         <span className='bg-white p-1'>or sign up with your Email</span>
         <div className='w-[90%] z-[-2] h-[0.5px] absolute translate-y-1/2 bg-black'></div>
@@ -256,7 +252,7 @@ export default function RegisterForm(props: any) {
           </label>
           {/* use local storage */}
         </div>
-        <Link to='/forgotPpass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
+        <Link to='/forgotPass' className='inline-block text-sm text-[#B88E2F] hover:opacity-55 cursor-pointer'>
           Forgot Password?
         </Link>
       </div>

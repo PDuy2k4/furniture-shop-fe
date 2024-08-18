@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, memo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
-import http from '~/Api/http'
+import http from '~/api/http'
 import { useNavigate } from 'react-router-dom'
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead'
 
@@ -10,14 +10,14 @@ const ResendEmailPage = function () {
   const { id } = useParams<{ id: string }>()
   const random = useRef(0)
   const [sending, setSending] = useState(true)
-  const hasCalledApi = useRef(false) // useRef để lưu trữ trạng thái gọi API
+  const hasCalledApi = useRef(true) // useRef để lưu trữ trạng thái gọi API
 
   useEffect(() => {
     if (hasCalledApi.current === false) {
-      hasCalledApi.current = true
       return
     } // Đánh dấu API đã được gọi
     const resendEmail = async () => {
+      hasCalledApi.current = false
       try {
         const response = await http.post('/auth/sendVerifiedEmail', { _id: id })
         if (response.status === 201) {
@@ -29,7 +29,7 @@ const ResendEmailPage = function () {
         nav('/verify-email/' + id)
       }
     }
-    resendEmail()
+    if (hasCalledApi.current) resendEmail()
   }, [id, nav, random.current])
 
   return (
@@ -69,6 +69,7 @@ const ResendEmailPage = function () {
                   random.current = Math.random()
 
                   setSending(true)
+                  hasCalledApi.current = true
                   // Reset trạng thái để cho phép gọi lại API
                 }}
                 id='buttonResend'
