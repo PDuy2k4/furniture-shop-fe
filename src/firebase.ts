@@ -1,16 +1,12 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
-// TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: 'e-commerce-furniture-c869e.firebaseapp.com',
-  projectId: 'e-commerce-furniture-c869e',
-  storageBucket: 'e-commerce-furniture-c869e.appspot.com',
-  messagingSenderId: '919670896585',
-  appId: '1:919670896585:web:002b7dae7923a234815a18'
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 }
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig)
