@@ -5,6 +5,7 @@ import hide from '../assets/hide.png'
 import back from '../assets/back.png'
 import dotenv from 'dotenv'
 import { Link } from 'react-router-dom'
+import { showToastMessage } from '~/components/ToastMessage'
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -23,19 +24,19 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     if (fullName === '') {
-      alert('Fill in full name')
+      showToastMessage('error', 'Please fill full name')
       return
     }
     if (email === '') {
-      alert('Fill in email')
+      showToastMessage('error', 'Fill in email')
       return
     }
     if (password === '' || retypePassword === '') {
-      alert('Fill in password')
+      showToastMessage('error', 'Fill in password')
       return
     }
     if (password !== retypePassword) {
-      alert('Password is not equal to retype password')
+      showToastMessage('error', 'Password is not equal to retype password')
       return
     }
     try {
@@ -53,10 +54,10 @@ export default function RegisterPage() {
       })
       const data = await response.json()
       if (response.status >= 200 && response.status < 300) {
-        console.log('Register successfully, please check your email to verify')
+        showToastMessage('success', 'Register successfully, please check your email to verify')
       } else {
         // Handle registration error
-        console.log('Registration failed:', data.message)
+        showToastMessage('error', data.message)
       }
     } catch (error) {
       console.error('Error:', error)
@@ -65,21 +66,12 @@ export default function RegisterPage() {
 
   return (
     <div className='relative w-full h-screen flex items-center justify-center bg-slate-300 bg-cover bg-right lg:bg-center bg-[url(https://images.pexels.com/photos/37347/office-sitting-room-executive-sitting.jpg?auto=compress&cs=tinysrgb&w=600https://images.pexels.com/photos/7939863/pexels-photo-7939863.jpeg?auto=compress&cs=tinysrgb&w=600)]'>
-      <div className='absolute z-[2] py-8 px-5 lg:py-10 lg:px-12 max-w-[330px] sm:max-w-[450px] md:max-w-[500px] lg:max-w-[550px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] '>
+      <div className='absolute z-[2] py-8 px-5 lg:py-10 lg:px-12 max-w-[330px] sm:max-w-[400px] md:max-w-[450px] lg:max-w-[500px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] '>
         <div className='flex flex-col items-stretch justify-center w-full rounded-[34px]'>
           <h2 className='text-2xl sm:text-[27px] lg:text-3xl text-[#525252] font-bold leading-5 mb-3 text-center'>
             Create Your Account
           </h2>
           <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>Welcome back, please enter your detail</p>
-
-          <div className='group gap-3 hover:bg-slate-200 hover:cursor-pointer flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'>
-            <img src={google} className='inline-block w-5 h-5' alt='Google-icon' />
-            <span className='inline-block text-xs text-[#828282] font-bold'>Continue with google</span>
-          </div>
-
-          <p className='my-4 lg:my-6 text-xs text-center text-[#A1A1A1] font-semibold'>
-            ------------- or Sign up with Email -------------
-          </p>
 
           <form>
             <label className='block mb-[26px]'>
@@ -118,7 +110,7 @@ export default function RegisterPage() {
               />
               <button type='button' className='absolute right-2 top-[50%] ' onClick={changeShowPasswordIcon}>
                 <img
-                  src={showPassword ? hide : show}
+                  src={showPassword ? show : hide}
                   className='inline-block rounded-[100rem] w-5 h-5 hover:bg-slate-200'
                   alt='Toggle password visibility'
                 />
@@ -137,7 +129,7 @@ export default function RegisterPage() {
               />
               <button type='button' className='absolute right-2 top-[50%] ' onClick={changeShowRetypePasswordIcon}>
                 <img
-                  src={showRetypePassword ? hide : show}
+                  src={showRetypePassword ? show : hide}
                   className='inline-block rounded-[100rem] w-5 h-5 hover:bg-slate-200'
                   alt='Toggle password visibility'
                 />

@@ -3,6 +3,7 @@ import google from '../assets/google.svg'
 import show from '../assets/show.png'
 import hide from '../assets/hide.png'
 import { Link, useNavigate } from 'react-router-dom'
+import { showToastMessage } from '~/components/ToastMessage'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -16,15 +17,15 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (email === '') {
-      alert('Fill in email')
+      showToastMessage('error', 'Please fill in email')
       return
     }
     if (password === '') {
-      alert('Fill in password')
+      showToastMessage('error', 'Please fill in password')
       return
     }
     try {
-      const response = await fetch('http://localhost:8000/v1/auth/login', {
+      const response = await fetch('', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -36,12 +37,15 @@ export default function LoginPage() {
       })
       const data = await response.json()
 
+      console.log(data.message)
+
       if (response.status >= 200 && response.status < 300) {
         // Handle successful registration
-        console.log('Login successfully')
+        navigate('/home')
+        showToastMessage('success', 'Login successfully')
       } else {
         // Handle registration error
-        console.log('Registration failed:', data.message)
+        showToastMessage('error', data.message)
         // Handle error data appropriately (see point 2 below)
       }
     } catch (error) {
@@ -75,10 +79,14 @@ export default function LoginPage() {
                 See what is going on with your business
               </p>
 
-              <div className='group gap-3 hover:bg-slate-200 hover:shadow-md hover:cursor-pointer flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'>
+              <a
+                target='blank'
+                href='http://localhost:8000/v1/auth/google'
+                className='group gap-3 hover:bg-slate-200 hover:shadow-md flex items-center justify-center  bg-white px-3 py-2 border shadow-sm border-slate-300 rounded-md sm:text-sm'
+              >
                 <img src={google} className='inline-block w-5 h-5' alt='Google-icon' />
                 <span className='inline-block text-xs text-[#828282] font-bold'>Continue with google</span>
-              </div>
+              </a>
 
               <p className='my-4 lg:my-6 text-xs text-center text-[#A1A1A1] font-semibold'>
                 ------------- or Sign in with Email -------------
@@ -111,7 +119,7 @@ export default function LoginPage() {
                   />
                   <button type='button' className='absolute right-2 top-[50%] ' onClick={changeShowPasswordIcon}>
                     <img
-                      src={showPassword ? hide : show}
+                      src={showPassword ? show : hide}
                       className='inline-block rounded-[100rem] w-5 h-5 hover:bg-slate-200'
                       alt='Toggle password visibility'
                     />
@@ -122,7 +130,7 @@ export default function LoginPage() {
                     <input className='block' type='checkbox' />
                     <span className='block text-xs font-normal text-[#A1A1A1]'>Remember me</span>
                   </label>
-                  <a className='block max-w-full text-xs font-semibold text-[#7F265B]' href=''>
+                  <a className='block max-w-full text-xs font-semibold text-[#7F265B]' onClick={() => {navigate('/forgotpassword')}}>
                     Forgot password?
                   </a>
                 </div>
