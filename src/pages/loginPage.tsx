@@ -25,7 +25,7 @@ export default function LoginPage() {
       return
     }
     try {
-      const response = await fetch('', {
+      const response = await fetch('http://localhost:8000/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

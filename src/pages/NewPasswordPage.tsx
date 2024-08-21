@@ -1,18 +1,16 @@
 import { useState, useCallback } from 'react'
-import google from '../assets/google.svg'
 import show from '../assets/show.png'
 import hide from '../assets/hide.png'
 import back from '../assets/back.png'
-import { Link } from 'react-router-dom'
+import dotenv from 'dotenv'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { showToastMessage } from '~/components/ToastMessage'
 
-export default function RegisterPage() {
+export default function NewPasswordPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showRetypePassword, setShowRetypePassword] = useState(false)
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [retypePassword, setRetypePassword] = useState('')
-  const [fullName, setFullName] = useState('')
 
   const changeShowPasswordIcon = useCallback(() => {
     setShowPassword((prevShowPassword) => !prevShowPassword)
@@ -21,42 +19,34 @@ export default function RegisterPage() {
     setShowRetypePassword((prevShowRetypePassword) => !prevShowRetypePassword)
   }, [])
 
-  const handleRegister = async () => {
-    if (fullName === '') {
-      showToastMessage('error', 'Please fill full name')
-      return
-    }
-    if (email === '') {
-      showToastMessage('error', 'Fill in email')
-      return
-    }
-    if (password === '' || retypePassword === '') {
-      showToastMessage('error', 'Fill in password')
-      return
-    }
-    if (password !== retypePassword) {
-      showToastMessage('error', 'Password is not equal to retype password')
-      return
-    }
+  const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get('token'); // Lấy giá trị của tham số 'token'
+
+  const handleUpdatePassword = async () => {
     try {
-      const response = await fetch('http://localhost:8000/v1/auth/register', {
+      const response = await fetch('http://localhost:8000/v1/auth/updatepassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: fullName,
-          email: email,
           password: password,
-          isAdmin: false
+          retypePassword: retypePassword,
+          token: token
         })
       })
       const data = await response.json()
-      if (response.status >= 200 && response.status < 300) {
-        showToastMessage('success', 'Register successfully, please check your email to verify')
+      if (response.ok) {
+        // Handle successful registration (e.g., redirect to login page)
+        console.log('Registration successful:', data)
+        navigate('/login')
+        showToastMessage('success', 'Update password successfully')
       } else {
         // Handle registration error
-        showToastMessage('error', data.message)
+        console.error('Registration failed:', data)
+        showToastMessage('error', '')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -65,40 +55,15 @@ export default function RegisterPage() {
 
   return (
     <div className='relative w-full h-screen flex items-center justify-center bg-slate-300 bg-cover bg-right lg:bg-center bg-[url(https://images.pexels.com/photos/37347/office-sitting-room-executive-sitting.jpg?auto=compress&cs=tinysrgb&w=600https://images.pexels.com/photos/7939863/pexels-photo-7939863.jpeg?auto=compress&cs=tinysrgb&w=600)]'>
-      <div className='absolute z-[2] py-8 px-5 lg:py-10 lg:px-12 max-w-[330px] sm:max-w-[400px] md:max-w-[450px] lg:max-w-[500px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] '>
+      <div className='absolute z-[2] py-10 px-5 lg:py-13 lg:px-12 max-w-[330px] sm:max-w-[450px] md:max-w-[500px] lg:max-w-[550px] w-full h-auto m-auto bg-[#ffffff] rounded-[34px] '>
         <div className='flex flex-col items-stretch justify-center w-full rounded-[34px]'>
           <h2 className='text-2xl sm:text-[27px] lg:text-3xl text-[#525252] font-bold leading-5 mb-3 text-center'>
-            Create Your Account
+            Verify successfully
           </h2>
-          <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>Welcome back, please enter your detail</p>
-
+          <p className='text-xs font-normal text-[#b9b9b9] mb-4 text-center'>Please provide us new password</p>
           <form>
-            <label className='block mb-[26px]'>
-              <span className='block text-sm text-[#828282] font-semibold'>Full Name</span>
-              <input
-                type='text'
-                placeholder='Enter full name'
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className=' mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-[#7F265B] focus:ring-[#7F265B] block w-full rounded-md sm:text-sm focus:ring-1'
-              />
-            </label>
-
-            <label className='block mb-[6px]'>
-              <span className='block text-sm text-[#828282] font-semibold'>Email</span>
-              <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className='peer mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-[#7F265B] focus:ring-[#7F265B] block w-full rounded-md sm:text-sm focus:ring-1'
-                placeholder='you@example.com'
-              />
-              <p className='mt-1 invisible peer-invalid:visible text-pink-600 text-xs'>
-                Please provide a valid email address.
-              </p>
-            </label>
             <label className='block mb-[26px] relative'>
-              <span className='block text-sm text-[#828282] font-semibold '>Password</span>
+              <span className='block text-sm text-[#828282] font-semibold '>New password</span>
               <input
                 id='passwordInput'
                 value={password}
@@ -117,7 +82,7 @@ export default function RegisterPage() {
             </label>
 
             <label className='block mb-[26px] relative'>
-              <span className='block text-sm text-[#828282] font-semibold '>Retype Password</span>
+              <span className='block text-sm text-[#828282] font-semibold '>Retype new password</span>
               <input
                 id='passwordInput'
                 placeholder='Enter password'
@@ -137,19 +102,11 @@ export default function RegisterPage() {
           </form>
 
           <button
-            onClick={handleRegister}
+            onClick={handleUpdatePassword}
             className='block w-full py-[10px] px[8px] mb-[12px]  text-center bg-[#7F265B] font-[750] text-white text-xl rounded-md  hover:bg-[#49213c]'
           >
-            Register
+            Reset password
           </button>
-          <div className='mx-auto w-fit flex items-center justify-center gap-2 hover:cursor-pointer'>
-            <a className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
-              <Link to='/login' className='inline-block max-w-full text-xs font-semibold text-[#7F265B]'>
-                <img className='inline-block w-5 h-5 mr-2' src={back} alt='back_icon' />
-                Back to login
-              </Link>
-            </a>
-          </div>
         </div>
       </div>
     </div>
